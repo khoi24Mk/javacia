@@ -58,7 +58,8 @@ public class ClientEngine extends Thread {
             String temp = br.readLine();
 
             if (temp.equals("FILE")){
-
+                readFileFromServer();
+                continue;
             }
             _msg.set_msg(temp);
             System.out.println(temp);

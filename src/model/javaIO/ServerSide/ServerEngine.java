@@ -133,10 +133,32 @@ public class ServerEngine /*extends Thread*/{
         System.out.println("LOOP");
         out.write(bytes, 0, count);
 
+        for (Socket eachClient :_listClient){
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter( eachClient.getOutputStream()));
+            bw.write("FILE");
+            bw.newLine(); //HERE!!!!!!
+            bw.flush();
+            writeFileToClient(eachClient);
+        }
+
 
 
         System.out.println("END");
 
+    }
+
+    public void writeFileToClient(Socket client) throws IOException {
+        File file = new File("src/model/output.txt");
+        // Get the size of the file
+        long length = file.length();
+        byte[] bytes = new byte[16 * 1024];
+        InputStream in = new FileInputStream(file);
+        OutputStream out = client.getOutputStream();
+
+        int count;
+        while ((count = in.read(bytes)) > 0) {
+            out.write(bytes, 0, count);
+        }
     }
 
     public void writeToClient() throws IOException {
