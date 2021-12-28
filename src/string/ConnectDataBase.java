@@ -1,8 +1,8 @@
 package string;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ConnectDataBase {
 
@@ -32,5 +32,62 @@ public class ConnectDataBase {
         return null;
     }
 
+    public static ResultSet getStudent() throws SQLException {
+        Statement statement = ConnectDataBase.createConnection().createStatement();
+        String sql = "SELECT * FROM student;";
+        return statement.executeQuery(sql);
+    }
+
+    public ResultSet doSth() throws SQLException {
+        Statement statement = ConnectDataBase.createConnection().createStatement();
+        String sql = "SELECT * FROM patient_history;";
+        return statement.executeQuery(sql);
+    }
+
+
+    public void doStuff() throws SQLException {
+        String sql = "SET IDENTITY_INSERT payment_history ON \n" +
+                "INSERT INTO payment_history(payment_history_id, citizen_id, payment_date,payment_amount) " +
+                "VALUES (?, ?, ?, ?) \n" +
+                "SET IDENTITY_INSERT payment_history OFF";
+        PreparedStatement statement = null;
+        try {
+            statement = ConnectDataBase.createConnection().prepareStatement(sql);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+
+        statement.setString(1, "1");
+        statement.setString(2, "1");
+        statement.setString(3, "1");
+        statement.setString(4, "1");
+        statement.executeUpdate();
+    }
+
+
+
+
+
+
+
+
+
+
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
