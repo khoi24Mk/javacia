@@ -56,18 +56,34 @@ public class ClientEngine extends Thread {
 
         while (true){
             String temp = br.readLine();
+
+            if (temp.equals("FILE")){
+
+            }
             _msg.set_msg(temp);
             System.out.println(temp);
         }
 
     }
 
-    public void writeToServer() throws IOException, InterruptedException {
+    public void readFileFromServer() throws IOException {
 
+        byte [] bytes = new byte[16*1024];
+        InputStream in =  _client.getInputStream();;
+        OutputStream out = new FileOutputStream("src/model/clientfile.txt");;
+
+        int count;
+        count = in.read(bytes);
+        System.out.println("LOOP");
+        out.write(bytes, 0, count);
+
+
+        System.out.println("END");
+    }
+    public void writeToServer() throws IOException, InterruptedException {
 
         bw = new BufferedWriter( new OutputStreamWriter(_client.getOutputStream()));
         Scanner ip = new Scanner(System.in);
-
 
         while (true){
 
@@ -77,6 +93,18 @@ public class ClientEngine extends Thread {
             temp = _msg.get_msg();
             System.out.println("Go ...");
 
+            if (temp.equals("FILE")){
+                bw.write("FILE");
+                bw.newLine(); //HERE!!!!!!
+                bw.flush();
+
+                /*Thread.sleep(2000);*/
+
+                writeFileToServer();
+
+                continue;
+            }
+
             ClientMessenger._flag = false;
 
             System.out.println("Send msg to Server: "+temp);
@@ -85,47 +113,26 @@ public class ClientEngine extends Thread {
             bw.flush();
 
             System.out.println("----------------");
-
         }
-
-
-
-
     }
 
-    public void readFromClient(Socket server, Runnable runMain) throws IOException {
-        br = new BufferedReader(new InputStreamReader(server.getInputStream()));
+    public void writeFileToServer() throws IOException {
+        File file = new File("src/model/test.txt");
+        // Get the size of the file
+        long length = file.length();
+        byte[] bytes = new byte[16 * 1024];
+        InputStream in = new FileInputStream(file);
+        OutputStream out = _client.getOutputStream();
 
-
-        while(true){
-
-            System.out.println("+TOSTRING+"+ runMain.toString());
-
-            System.out.println("+3+"+
-                    Thread.currentThread().getName());
-
-            System.out.println("Waiting msg from client");
-            String temp = br.readLine();
-            /*messenger.set_msg(temp);*/
-            System.out.println(temp);
-            ClientMessenger._flag = false;
+        int count;
+        while ((count = in.read(bytes)) > 0) {
+            out.write(bytes, 0, count);
         }
     }
 
 
 
-    public void writeToClient(Socket client) throws IOException {
-        bw = new BufferedWriter(new OutputStreamWriter( client.getOutputStream()));
-        Scanner ip = new Scanner(System.in);
 
-
-        while (true){
-            String temp = ip.nextLine();
-            bw.write(temp);
-            bw.newLine(); //HERE!!!!!!
-            bw.flush();
-        }
-    }
 
 
 }

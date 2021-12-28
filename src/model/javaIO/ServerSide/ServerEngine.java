@@ -78,7 +78,6 @@ public class ServerEngine /*extends Thread*/{
 
     public void readFromClient(Socket client) throws IOException {
 
-
         BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
         new Thread(){
             @Override
@@ -93,8 +92,18 @@ public class ServerEngine /*extends Thread*/{
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    if (temp.equals("FILE")){
+                        try {
+                            readFileFromClient(client);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println("OUT");
+                        continue;
+                    }
                     try {
                         _msg.set_msg(temp);
+
                         for (Socket eachClient: _listClient){
                             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter( eachClient.getOutputStream()));
                             bw.write(temp);
@@ -107,14 +116,26 @@ public class ServerEngine /*extends Thread*/{
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                 }
-
             }
         }.start();
+    }
+
+    public void readFileFromClient(Socket client) throws IOException {
+        System.out.println("START");
+        BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        byte [] bytes = new byte[16*1024];
+        InputStream in =  client.getInputStream();;
+        OutputStream out = new FileOutputStream("src/model/output.txt");;
+
+        int count;
+        count = in.read(bytes);
+        System.out.println("LOOP");
+        out.write(bytes, 0, count);
 
 
 
+        System.out.println("END");
 
     }
 

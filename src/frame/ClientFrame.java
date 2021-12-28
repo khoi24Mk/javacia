@@ -26,6 +26,9 @@ public class ClientFrame extends JFrame {
         JButton btnInput = new JButton("Send");
         btnInput.setBounds(10,10,120,30);
 
+        JButton btnFile = new JButton("FILE");
+        btnFile.setBounds(10,40,120,30);
+
 
         JTextField textInput = new JTextField();
         textInput.setBounds(10,40,200,200);
@@ -34,6 +37,7 @@ public class ClientFrame extends JFrame {
         textOutput.setBounds(10,300,200,200);
 
 
+        this.add(btnFile);
         this.add(textOutput);
         this.add(btnInput);
         this.add(textInput);
@@ -53,6 +57,28 @@ public class ClientFrame extends JFrame {
                     try {
                         System.out.println("nap dan");
                         _msgOUT.set_msg(msg);
+                        System.out.println("nap dan xongggg");
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+
+            }
+        });
+
+        btnFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("CLICKED");
+
+                synchronized (this){
+                    System.out.println("IN");
+
+
+                    try {
+                        System.out.println("nap dan");
+                        _msgOUT.set_msg("FILE");
                         System.out.println("nap dan xongggg");
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
